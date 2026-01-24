@@ -40,6 +40,10 @@
   nixosTests,
   gmobile,
   appstream,
+  qrcodegen,
+  gobject-introspection,
+  gi-docgen,
+  docutils,
 }:
 
 let
@@ -64,7 +68,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "phosh";
-  version = "0.51.0";
+  version = "0.52.1";
 
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
@@ -72,7 +76,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "Phosh";
     repo = "phosh";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-bM1eKa5/aBjAHOFYyqjs6pLmr3R/WoK3590yGiLVNM4=";
+    hash = "sha256-5LeOFzxeeKGsUTya18AWp+V2vhfzEQUI1EFGMBgXDuc=";
   };
 
   nativeBuildInputs = [
@@ -111,6 +115,10 @@ stdenv.mkDerivation (finalAttrs: {
     wayland
     feedbackd
     appstream
+    qrcodegen
+    gobject-introspection
+    gi-docgen
+    docutils
   ];
 
   nativeCheckInputs = [
@@ -130,7 +138,9 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dcompositor=${phoc}/bin/phoc"
     # Save some time building if tests are disabled
     "-Dtests=${lib.boolToString finalAttrs.finalPackage.doCheck}"
-    "-Dc_args=-I${glib.dev}/include/gio-unix-2.0/"
+    "-Dgtk_doc=true"
+    "-Dman=true"
+    "-Dsearchd=true"
   ];
 
   checkPhase = ''
