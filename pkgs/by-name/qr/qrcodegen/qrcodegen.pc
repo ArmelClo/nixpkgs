@@ -1,0 +1,10 @@
+prefix=@PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/qrcodegen
+
+Name: qrcodegen
+Description: QR Code Generator
+Version: @VERSION@
+Libs: -L${libdir} -lqrcodegen
+Cflags: -I${includedir}
