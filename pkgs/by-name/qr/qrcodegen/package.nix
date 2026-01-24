@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  pkg-config,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -19,9 +20,17 @@ stdenv.mkDerivation (finalAttrs: {
 
   nativeBuildInputs = lib.optionals stdenv.cc.isClang [
     stdenv.cc.cc.libllvm.out
-  ];
+  ] ++ [pkg-config];
 
   makeFlags = lib.optionals stdenv.cc.isClang [ "AR=llvm-ar" ];
+
+  postPatch = ''
+    mkdir -p $out/lib/pkgconfig
+    cp ${./qrcodegen.pc} $out/lib/pkgconfig/qrcodegen.pc
+    substituteInPlace $out/lib/pkgconfig/qrcodegen.pc \
+      --replace "@PREFIX@" "$out" \
+      --replace "@VERSION@" "$version"
+  '';
 
   doCheck = true;
   checkPhase = ''
